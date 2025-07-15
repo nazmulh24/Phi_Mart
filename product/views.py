@@ -3,6 +3,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.mixins import CreateModelMixin, ListModelMixin
+from rest_framework.generics import ListCreateAPIView
 from product.models import Product, Category
 from product.serializers import ProductSerializer, CategorySerializer
 from django.db.models import Count
@@ -19,6 +21,25 @@ class ViewProducts(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class ProductsList(ListCreateAPIView):
+    queryset = Product.objects.select_related("category").all()
+    serializer_class = ProductSerializer
+
+    """
+    Normal view/something er jonno Normal-vabe use hobe...
+    Logical kaj er jonno method/function nite hobe...
+    """
+
+    # def get_queryset(self):
+    #     return Product.objects.select_related("category").all()
+
+    # def get_serializer_class(self):
+    #     return ProductSerializer
+
+    # def get_serializer_context(self):
+    #     return {"request": self.request}
 
 
 class ViewSpecificProduct(APIView):
@@ -53,6 +74,11 @@ class ViewCategory(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class CategoryList(ListCreateAPIView):
+    queryset = Category.objects.annotate(product_count=Count("products")).all()
+    serializer_class = CategorySerializer
 
 
 class ViewSpecificCategory(APIView):
