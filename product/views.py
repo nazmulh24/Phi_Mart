@@ -12,36 +12,14 @@ from product.serializers import ProductSerializer, CategorySerializer
 from django.db.models import Count
 
 
-class ProductsList(ListCreateAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-
-
-class ProductDetails(RetrieveUpdateDestroyAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-
-    lookup_field = "id"
-
-
-class CategoryList(ListCreateAPIView):
-    queryset = Category.objects.annotate(product_count=Count("products")).all()
-    serializer_class = CategorySerializer
-
-
-class CategoryDetails(RetrieveUpdateDestroyAPIView):
-    queryset = Category.objects.annotate(product_count=Count("products")).all()
-    serializer_class = CategorySerializer
-
-    lookup_field = "id"
-
-
-# ----------> ViewSet | ModelViewSet in below...
-
-
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+    """
+    Below/Niche--> method Over-write korsi...eikhane jemon logical Jinis-potro...
+    we_know,,, logical modify er jonno method Over-Write korte hoy...
+    """
 
     def destroy(self, request, *args, **kwargs):
         product = self.get_object()
