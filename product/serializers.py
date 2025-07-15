@@ -8,7 +8,9 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ["id", "name", "description", "product_count"]
 
-    product_count = serializers.IntegerField()  # --> views.view_categories(annotate())
+    product_count = serializers.IntegerField(
+        read_only=True
+    )  # --> views.view_categories(annotate()) theke asse.....
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -43,4 +45,4 @@ class ProductSerializer(serializers.ModelSerializer):
     #     product = Product(**validated_data)
     #     product.other = 1  # --> `other` column create hobe + value assign hobe
     #     product.save()
-        # return product
+    # return product

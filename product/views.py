@@ -33,7 +33,6 @@ def view_specific_products(request, id):
     if request.method == "PUT":
         product = get_object_or_404(Product, pk=id)
         serializer = ProductSerializer(product, data=request.data)
-
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -62,8 +61,27 @@ def view_categories(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-@api_view()
+@api_view(["GET", "PUT", "DELETE"])
 def view_specific_categories(request, pk):
-    category = get_object_or_404(Category, pk=pk)
-    serializer = CategorySerializer(category)
-    return Response(serializer.data)
+    if request.method == "GET":
+        category = get_object_or_404(
+            Category.objects.annotate(product_count=Count("products")), pk=pk
+        )
+        serializer = CategorySerializer(category)
+        return Response(serializer.data)
+
+    if request.method == "PUT":
+        category = get_object_or_404(
+            Category.objects.annotate(product_count=Count("products")), pk=pk
+        )
+        serializer = CategorySerializer(category, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    if request.method == "DELETE":
+        category = get_object_or_404(
+            Category.objects.annotate(product_count=Count("products")), pk=pk
+        )
+        category.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
