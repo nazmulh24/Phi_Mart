@@ -38,3 +38,9 @@ class ProductSerializer(serializers.ModelSerializer):
         if price < 0:
             raise serializers.ValidationError("Price could't be negative !")
         return price
+
+    # def create(self, validated_data):
+    #     product = Product(**validated_data)
+    #     product.other = 1  # --> `other` column create hobe + value assign hobe
+    #     product.save()
+        # return product
