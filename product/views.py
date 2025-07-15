@@ -2,8 +2,18 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from product.models import Product, Category
-from product.serializers import ProductSerializer
-#
+from product.serializers import ProductSerializer, CategorySerializer
+
+
+@api_view()
+def view_products(request):
+    products = Product.objects.select_related("category").all()
+    serializer = ProductSerializer(
+        products,
+        many=True,
+        context={"request": request}
+    )
+    return Response(serializer.data)
 
 
 @api_view()
@@ -15,4 +25,13 @@ def view_specific_products(request, id):
 
 @api_view()
 def view_categories(request):
-    return Response({"message" : "Category"})
+    categories = Category.objects.all()
+    serializer = CategorySerializer(categories, many=True)
+    return Response(serializer.data)
+
+
+@api_view()
+def view_specific_categories(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+    serializer = CategorySerializer(category)
+    return Response(serializer.data)
