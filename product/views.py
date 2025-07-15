@@ -17,12 +17,10 @@ def view_products(request):
     if request.method == "POST":
         serializer = ProductSerializer(data=request.data)  # --> Deserializer
 
-        if serializer.is_valid():
-            print(serializer.validated_data)
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+        serializer.is_valid(raise_exception=True)
+        print(serializer.validated_data)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 @api_view()
@@ -42,12 +40,10 @@ def view_categories(request):
     if request.method == "POST":
         serializer = CategorySerializer(data=request.data)  # --> Deserializer
 
-        if serializer.is_valid():
-            print(serializer.validated_data)
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+        serializer.is_valid(raise_exception=True)
+        print(serializer.validated_data)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 @api_view()
