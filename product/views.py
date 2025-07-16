@@ -3,7 +3,6 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.pagination import PageNumberPagination
 
 from product.filters import ProductFilter
 from product.models import Product, Category, Review
@@ -17,7 +16,7 @@ class ProductViewSet(ModelViewSet):
 
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = ProductFilter
-    pagination_class = PageNumberPagination
+    # pagination_class = PageNumberPagination
     search_fields = ["name", "description"]
     ordering_fields = ["price", "created_at", "updated_at"]
 
