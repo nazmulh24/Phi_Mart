@@ -4,6 +4,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from django_filters.rest_framework import DjangoFilterBackend
 
+from product.filters import ProductFilter
 from product.models import Product, Category, Review
 from product.serializers import ProductSerializer, CategorySerializer, ReviewSerializer
 from django.db.models import Count
@@ -14,14 +15,8 @@ class ProductViewSet(ModelViewSet):
     serializer_class = ProductSerializer
 
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["category_id", "price"]
-
-    # def get_queryset(self):
-    #     queryset = Product.objects.all()
-    #     category_id = self.request.query_params.get("category_id")
-    #     if category_id is not None:
-    #         queryset = Product.objects.filter(category_id=category_id)
-    #     return queryset
+    # filterset_fields = ["category_id", "price"]
+    filterset_class = ProductFilter  # --------> We use Custom Filters...
 
     # ---> Custom filter for delete an item...|--> delete not allow when--> product>10
     def destroy(self, request, *args, **kwargs):
