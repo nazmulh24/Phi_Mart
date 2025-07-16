@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
-
+from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
 from product.filters import ProductFilter
@@ -14,9 +14,9 @@ class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
-    filter_backends = [DjangoFilterBackend]
-    # filterset_fields = ["category_id", "price"]
-    filterset_class = ProductFilter  # --------> We use Custom Filters...
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_class = ProductFilter
+    search_fields = ["name", "description", "category__name"]
 
     # ---> Custom filter for delete an item...|--> delete not allow when--> product>10
     def destroy(self, request, *args, **kwargs):
