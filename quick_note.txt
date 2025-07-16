@@ -1,0 +1,9 @@
+"""
+----- Step to Build an API -----
+        1. Model
+        2. Serializer
+        3. ViewSet
+        4. Router
+"""
+
+

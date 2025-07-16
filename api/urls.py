@@ -1,14 +1,19 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from product.views import ProductViewSet, CategoryViewSet
+from rest_framework_nested import routers
+
+from product.views import ProductViewSet, CategoryViewSet, ReviewViewSet
 
 
-router = DefaultRouter()  # ----> Api Root a error day na...link day...
+router = routers.DefaultRouter()  # ----> Api Root a error day na...link day...
 router.register("products", ProductViewSet)
 router.register("categories", CategoryViewSet)
+
+product_router = routers.NestedDefaultRouter(router, "products", lookup="product")
+product_router.register("reviews", ReviewViewSet, basename="product-review")
 
 
 urlpatterns = [
     path("", include(router.urls)),
-    # --> Aro path add kora jabe....
+    path("", include(product_router.urls)),
 ]
