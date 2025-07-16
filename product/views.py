@@ -8,8 +8,15 @@ from django.db.models import Count
 
 
 class ProductViewSet(ModelViewSet):
-    queryset = Product.objects.all()
+    # queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        queryset = Product.objects.all()
+        category_id = self.request.query_params.get("category_id")
+        if category_id is not None:
+            queryset = Product.objects.filter(category_id=category_id)
+        return queryset
 
     # ---> Custom filter for delete an item...|--> delete not allow when--> product>10
     def destroy(self, request, *args, **kwargs):

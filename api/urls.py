@@ -6,7 +6,7 @@ from product.views import ProductViewSet, CategoryViewSet, ReviewViewSet
 
 
 router = routers.DefaultRouter()  # ----> Api Root a error day na...link day...
-router.register("products", ProductViewSet)
+router.register("products", ProductViewSet, basename="products")
 router.register("categories", CategoryViewSet)
 
 product_router = routers.NestedDefaultRouter(router, "products", lookup="product")
