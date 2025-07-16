@@ -1,8 +1,9 @@
 from django.db import models
+from django.core.validators import MinValueValidator
+from uuid import uuid4
+
 from users.models import User
 from product.models import Product
-
-from uuid import uuid4
 
 
 class Cart(models.Model):
@@ -17,7 +18,7 @@ class Cart(models.Model):
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField(validators=[MinValueValidator(1)])
 
     class Meta:
         unique_together = [["cart", "product"]]
