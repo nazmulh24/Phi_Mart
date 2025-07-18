@@ -7,12 +7,13 @@ from rest_framework.mixins import (
 )
 from rest_framework.permissions import IsAuthenticated
 
-from order.models import Cart, CartItem
+from order.models import Cart, CartItem, Order, OrderItem
 from order.serializers import (
     CartSerializer,
     CartItemSerializer,
     AddCartItemSerializer,
     UpdateCartItemSerializer,
+    OrderSerializer,
 )
 
 
@@ -22,7 +23,9 @@ class CartViewSet(
 ):
     # queryset = Cart.objects.all()
     def get_queryset(self):
-        return Cart.objects.filter(user=self.request.user)
+        return Cart.objects.prefetch_related("items__product").filter(
+            user=self.request.user
+        )
 
     serializer_class = CartSerializer
 
@@ -45,3 +48,17 @@ class CartItemViewSet(ModelViewSet):
         elif self.request.method == "PATCH":
             return UpdateCartItemSerializer
         return CartItemSerializer
+
+
+class OrderViewSet(ModelViewSet):
+    # queryset = Order.objects.all()
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Order.objects.prefetch_related("items__product").all()
+        return Order.objects.prefetch_related("items__product").filter(
+            user=self.request.user
+        )
+
+    serializer_class = OrderSerializer
+
+    permission_classes = [IsAuthenticated]
