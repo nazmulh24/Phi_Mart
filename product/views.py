@@ -4,6 +4,8 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
+from rest_framework.permissions import IsAdminUser, AllowAny
+
 from product.paginations import DefaultPagination
 from product.filters import ProductFilter
 from product.models import Product, Category, Review
@@ -15,9 +17,16 @@ class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
+    pagination_class = DefaultPagination
+    # permission_classes = [IsAdminUser]
+
+    def get_permissions(self):
+        if self.request.method in ["GET", "HEAD", "OPTIONS"]:
+            return [AllowAny()]
+        return [IsAdminUser()]
+
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = ProductFilter
-    pagination_class = DefaultPagination
     search_fields = ["name", "description"]
     ordering_fields = ["price", "created_at", "updated_at"]
 
