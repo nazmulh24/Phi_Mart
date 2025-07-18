@@ -2,6 +2,8 @@ from rest_framework import serializers
 from decimal import Decimal
 from product.models import Product, Category, Review
 
+from django.contrib.auth import get_user_model
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -42,10 +44,28 @@ class ProductSerializer(serializers.ModelSerializer):
         return price
 
 
+class SimpleUserSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField(method_name="full_name")
+
+    class Meta:
+        model = get_user_model()
+        fields = ["id", "name"]
+
+    def full_name(self, obj):
+        return obj.get_full_name()
+
+
 class ReviewSerializer(serializers.ModelSerializer):
+    # user = SimpleUserSerializer() #--> 1st way..
+    user = serializers.SerializerMethodField(method_name="get_user")  # --> 2nd way..
+
     class Meta:
         model = Review
-        fields = ["id", "name", "description", "date"]
+        fields = ["id", "user", "rating", "product", "comment"]
+        read_only_fields = ["user", "product"]
+
+    def get_user(self, obj):
+        return SimpleUserSerializer(obj.user).data
 
     def create(self, validated_data):
         product_id = self.context["product_id"]
