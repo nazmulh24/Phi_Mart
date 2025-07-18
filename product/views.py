@@ -8,7 +8,7 @@ from rest_framework.permissions import (
     DjangoModelPermissions,
     DjangoModelPermissionsOrAnonReadOnly,
 )
-from api.permissions import IsAdminOrReadOnly
+from api.permissions import IsAdminOrReadOnly, FullDjangoModelPermission
 
 from product.paginations import DefaultPagination
 from product.filters import ProductFilter
@@ -25,7 +25,8 @@ class ProductViewSet(ModelViewSet):
     # permission_classes = [IsAdminUser]
     # permission_classes = [IsAdminOrReadOnly]
     # permission_classes = [DjangoModelPermissions]
-    permission_classes = [DjangoModelPermissionsOrAnonReadOnly]
+    # permission_classes = [DjangoModelPermissionsOrAnonReadOnly]
+    permission_classes = [FullDjangoModelPermission]
 
     # def get_permissions(self):
     #     if self.request.method in ["GET", "HEAD", "OPTIONS"]:
