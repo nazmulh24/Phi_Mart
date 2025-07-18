@@ -72,3 +72,6 @@ class OrderViewSet(ModelViewSet):
         return OrderSerializer
 
     permission_classes = [IsAuthenticated]
+
+    def get_serializer_context(self):
+        return {"user_id": self.request.user.id}
