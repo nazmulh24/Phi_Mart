@@ -4,11 +4,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
-from rest_framework.permissions import (
-    DjangoModelPermissions,
-    DjangoModelPermissionsOrAnonReadOnly,
-)
-from api.permissions import IsAdminOrReadOnly, FullDjangoModelPermission
+from api.permissions import IsAdminOrReadOnly
 
 from product.paginations import DefaultPagination
 from product.filters import ProductFilter
@@ -22,16 +18,7 @@ class ProductViewSet(ModelViewSet):
     serializer_class = ProductSerializer
 
     pagination_class = DefaultPagination
-    # permission_classes = [IsAdminUser]
-    # permission_classes = [IsAdminOrReadOnly]
-    # permission_classes = [DjangoModelPermissions]
-    # permission_classes = [DjangoModelPermissionsOrAnonReadOnly]
-    permission_classes = [FullDjangoModelPermission]
-
-    # def get_permissions(self):
-    #     if self.request.method in ["GET", "HEAD", "OPTIONS"]:
-    #         return [AllowAny()]
-    #     return [IsAdminUser()]
+    permission_classes = [IsAdminOrReadOnly]  # --> Ok for Normal Use..
 
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = ProductFilter
