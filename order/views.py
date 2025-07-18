@@ -14,6 +14,7 @@ from order.serializers import (
     AddCartItemSerializer,
     UpdateCartItemSerializer,
     OrderSerializer,
+    OrderCreateSerializer,
 )
 
 
@@ -27,6 +28,9 @@ class CartViewSet(
             user=self.request.user
         )
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
     serializer_class = CartSerializer
 
     permission_classes = [IsAuthenticated]
@@ -36,7 +40,9 @@ class CartItemViewSet(ModelViewSet):
     http_method_names = ["get", "post", "patch", "delete"]
 
     def get_queryset(self):
-        queryset = CartItem.objects.filter(cart_id=self.kwargs["cart_pk"])
+        queryset = CartItem.objects.select_related("product").filter(
+            cart_id=self.kwargs["cart_pk"]
+        )
         return queryset
 
     def get_serializer_context(self):
@@ -59,6 +65,10 @@ class OrderViewSet(ModelViewSet):
             user=self.request.user
         )
 
-    serializer_class = OrderSerializer
+    # serializer_class = OrderSerializer
+    def get_serializer_class(self):
+        if self.request.method in ["POST", "PUT", "PATCH"]:
+            return OrderCreateSerializer
+        return OrderSerializer
 
     permission_classes = [IsAuthenticated]
