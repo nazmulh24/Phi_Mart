@@ -6,7 +6,10 @@ from rest_framework.mixins import (
     DestroyModelMixin,
 )
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
+from order.services import OrderService
 from order.models import Cart, CartItem, Order, OrderItem
 from order.serializers import (
     CartSerializer,
@@ -17,6 +20,7 @@ from order.serializers import (
     OrderCreateSerializer,
     UpdateOrderSerializer,
 )
+from order import serializers as orderSz
 
 
 # ---> ModelViewSet use kori nai---> couse-- amra ListModelMixin use korte cai na...
@@ -60,6 +64,12 @@ class CartItemViewSet(ModelViewSet):
 class OrderViewSet(ModelViewSet):
     http_method_names = ["get", "post", "delete", "patch", "head", "options"]
 
+    @action(detail=True, methods=["post"])
+    def cancel(self, request, pk=None):
+        order = self.get_object()
+        OrderService.cancel_order(order=order, user=request.user)
+        return Response({"status": "Order canceled"})
+
     def get_permissions(self):
         if self.request.method in ["DELETE"]:
             return [IsAdminUser()]
@@ -73,6 +83,8 @@ class OrderViewSet(ModelViewSet):
         )
 
     def get_serializer_class(self):
+        if self.action == "cancel":
+            return orderSz.EmptySerializer
         if self.request.method in ["POST"]:
             return OrderCreateSerializer
         elif self.request.method in ["PATCH"]:
