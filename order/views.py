@@ -27,7 +27,6 @@ from order import serializers as orderSz
 class CartViewSet(
     CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, GenericViewSet
 ):
-    # queryset = Cart.objects.all()
     def get_queryset(self):
         return Cart.objects.prefetch_related("items__product").filter(
             user=self.request.user
@@ -81,7 +80,6 @@ class OrderViewSet(ModelViewSet):
         return Response({"status": f"Order status updated to {request.data['status']}"})
 
     def get_permissions(self):
-        # if self.request.method in ["DELETE"]:
         if self.action in ["update_status", "destroy"]:
             return [IsAdminUser()]
         return [IsAuthenticated()]
@@ -96,10 +94,8 @@ class OrderViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.action == "cancel":
             return orderSz.EmptySerializer
-        # if self.request.method in ["POST"]:
         if self.action == "create":
             return OrderCreateSerializer
-        # elif self.request.method in ["PATCH"]:
         elif self.action == "update_status":
             return UpdateOrderSerializer
         return OrderSerializer
