@@ -64,11 +64,20 @@ http://127.0.0.1:8000/redoc/
 ## Environment Variables
 Create a `.env` file in the root directory and add the following:
 ```ini
-SECRET_KEY=your_secret_key
-DEBUG=True
-DATABASE_URL=your_database_url
-ALLOWED_HOSTS=*
-EMIL_HOST=your_email_host
+#--> Database Configuration
+user=postgres.loiykfdzrtgzmqspmnvt 
+password=GrMTCAnhmi8arM6P 
+host=aws-0-ap-southeast-1.pooler.supabase.com
+port=5432
+dbname=postgres
+
+#--> Cloudinary Configuration
+cloud_name=dlkq5sjum
+api_key=813361344897553
+api_secret=wSQnOJSehmaz5gdx9bQY88EhiHo
+#
+CLOUDINARY_URL=cloudinary://813361344897553:**********@dlkq5sjum
+
 ```
 
 ## License
