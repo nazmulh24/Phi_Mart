@@ -11,7 +11,7 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ["id", "name", "description", "product_count"]
 
     product_count = serializers.IntegerField(
-        read_only=True
+        read_only=True, help_text="Number of products in this category"
     )  # --> views.view_categories(annotate()) theke asse.....
 
 
