@@ -4,6 +4,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 from product.validators import validate_file_size
 
+from cloudinary.models import CloudinaryField
+
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
@@ -39,10 +41,8 @@ class ProductImage(models.Model):
         on_delete=models.CASCADE,
         related_name="images",
     )
-    image = models.ImageField(
-        upload_to="products/images",
-        validators=[validate_file_size],
-    )
+    # image = models.ImageField(upload_to="products/images", validators=[validate_file_size])
+    image = CloudinaryField("image", validators=[validate_file_size])
 
     def __str__(self):
         return f"Image for {self.product.name}"
