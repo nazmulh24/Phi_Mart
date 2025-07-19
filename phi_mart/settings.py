@@ -83,7 +83,9 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "phi_mart.wsgi.application"
+WSGI_APPLICATION = (
+    "phi_mart.wsgi.app"  # --> Vercel requires the WSGI application to be named 'app'
+)
 
 
 # Database
