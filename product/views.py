@@ -9,7 +9,7 @@ from api.permissions import IsAdminOrReadOnly
 from product.permissions import IsReviewAuthorOrReadonly
 from product.paginations import DefaultPagination
 from product.filters import ProductFilter
-from product.models import Product, Category, Review
+from product.models import Product, ProductImage, Category, Review
 from product.serializers import (
     ProductSerializer,
     ProductImageSerializer,
@@ -62,13 +62,10 @@ class ProductImageViewSet(ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
 
     def get_queryset(self):
-        product_id = self.kwargs["product_pk"]
-        return Product.objects.get(id=product_id).images.all()
+        return ProductImage.objects.filter(product_id=self.kwargs.get("product_pk"))
 
     def perform_create(self, serializer):
-        product_id = self.kwargs["product_pk"]
-        product = Product.objects.get(id=product_id)
-        serializer.save(product=product)
+        serializer.save(product_id=self.kwargs.get("product_pk"))
 
 
 class CategoryViewSet(ModelViewSet):
@@ -89,9 +86,7 @@ class ReviewViewSet(ModelViewSet):
     #     serializer.save(user=self.request.user)
 
     def get_queryset(self):
-        queryset = Review.objects.filter(product_id=self.kwargs["product_pk"])
-        return queryset
+        return Review.objects.filter(product_id=self.kwargs.get("product_pk"))
 
-    # __In-Below__|----> Automatic id ta get korlam (oi product tar)...
     def get_serializer_context(self):
-        return {"product_id": self.kwargs["product_pk"]}
+        return {"product_id": self.kwargs.get("product_pk")}
