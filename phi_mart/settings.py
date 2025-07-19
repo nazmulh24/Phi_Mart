@@ -14,9 +14,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-zhj(hvg&0sm)@&%q#6@dn*gk-w9)9ru0wzw0i-qlq1u%by-9c4"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False  # ------> Set to False in production
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [".vercel.app", "127.0.0.1"]
 
 AUTH_USER_MODEL = "users.User"
 
@@ -24,6 +24,8 @@ AUTH_USER_MODEL = "users.User"
 # Application definition
 
 INSTALLED_APPS = [
+    "whitenoise.runserver_nostatic",  # --> For serving static files in development
+    #
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -31,11 +33,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     #
-    "drf_yasg",
-    "django_filters",
-    "rest_framework",
-    "djoser",
-    "debug_toolbar",
+    "drf_yasg",  # --> For API documentation
+    "django_filters",  # --> For filtering in Django REST Framework
+    "rest_framework",  # --> For building REST APIs
+    "djoser",  # --> For user authentication and management
+    "debug_toolbar",  # --> For debugging in development
     #
     "api",
     "order",
@@ -44,9 +46,12 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",  # --> For debugging in development
     #
     "django.middleware.security.SecurityMiddleware",
+    #
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # --> For serving static files in production
+    #
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -152,6 +157,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+# STATIC_FILES_DIRS = BASE_DIR / "static"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
