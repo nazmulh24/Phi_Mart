@@ -75,8 +75,16 @@ dbname=postgres
 cloud_name=dlkq5sjum
 api_key=813361344897553
 api_secret=wSQnOJSehmaz5gdx9bQY88EhiHo
-#
-CLOUDINARY_URL=cloudinary://813361344897553:**********@dlkq5sjum
+
+#--> Email Configuration
+EMAIL_HOST=smtp.gmail.com
+EMAIL_USE_TLS=True
+EMAIL_PORT=587
+EMAIL_HOST_USER=snazmulhossains24@gmail.com
+EMAIL_HOST_PASSWORD=bflc egnw ixel zwye
+
+DEFAULT_FROM_EMAIL=snazmulhossains24@gmail.com
+ADMIN_EMAIL=snazmulhossains24@gmail.com
 
 ```
 
