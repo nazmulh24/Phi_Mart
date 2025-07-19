@@ -15,7 +15,15 @@ class CategorySerializer(serializers.ModelSerializer):
     )  # --> views.view_categories(annotate()) theke asse.....
 
 
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ["id", "product", "image"]
+
+
 class ProductSerializer(serializers.ModelSerializer):
+    images = ProductImageSerializer(many=True, read_only=True)
+
     class Meta:
         model = Product
         fields = [
@@ -26,14 +34,10 @@ class ProductSerializer(serializers.ModelSerializer):
             "stock",
             "category",
             "price_with_tax",
+            "images",
         ]
 
     price_with_tax = serializers.SerializerMethodField(method_name="calculate_tax")
-
-    # category = serializers.HyperlinkedRelatedField(
-    #     queryset=Category.objects.all(), view_name="specific-category"
-    # )
-    # category = CategorySerializer()
 
     def calculate_tax(self, product):
         return round(product.price * Decimal(1.10), 2)
@@ -42,12 +46,6 @@ class ProductSerializer(serializers.ModelSerializer):
         if price < 0:
             raise serializers.ValidationError("Price could't be negative !")
         return price
-
-
-class ProductImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductImage
-        fields = ["id", "product", "image"]
 
 
 class SimpleUserSerializer(serializers.ModelSerializer):
