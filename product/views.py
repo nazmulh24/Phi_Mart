@@ -10,7 +10,12 @@ from product.permissions import IsReviewAuthorOrReadonly
 from product.paginations import DefaultPagination
 from product.filters import ProductFilter
 from product.models import Product, Category, Review
-from product.serializers import ProductSerializer, CategorySerializer, ReviewSerializer
+from product.serializers import (
+    ProductSerializer,
+    ProductImageSerializer,
+    CategorySerializer,
+    ReviewSerializer,
+)
 from django.db.models import Count
 
 
@@ -26,15 +31,18 @@ class ProductViewSet(ModelViewSet):
     search_fields = ["name", "description"]
     ordering_fields = ["price", "created_at", "updated_at"]
 
-    # ---> Custom filter for delete an item...|--> delete not allow when--> product>10
-    def destroy(self, request, *args, **kwargs):
-        product = self.get_object()
-        if product.stock > 10:
-            return Response(
-                {"message": "Product with stock more than 10 could't be delete !"}
-            )
-        self.perform_destroy(product)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class ProductImageViewSet(ModelViewSet):
+    serializer_class = ProductImageSerializer
+
+    def get_queryset(self):
+        product_id = self.kwargs["product_pk"]
+        return Product.objects.get(id=product_id).images.all()
+
+    def perform_create(self, serializer):
+        product_id = self.kwargs["product_pk"]
+        product = Product.objects.get(id=product_id)
+        serializer.save(product=product)
 
 
 class CategoryViewSet(ModelViewSet):
