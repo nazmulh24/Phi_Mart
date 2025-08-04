@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     #
     "drf_yasg",  # --> For API documentation
     "django_filters",  # --> For filtering in Django REST Framework
+    "corsheaders",  # --> For handling CORS (Cross-Origin Resource Sharing)
     "rest_framework",  # --> For building REST APIs
     "djoser",  # --> For user authentication and management
     "debug_toolbar",  # --> For debugging in development
@@ -46,6 +47,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",  # --> For handling CORS (Cross-Origin Resource Sharing)
+    #
     "debug_toolbar.middleware.DebugToolbarMiddleware",  # --> For debugging in development
     #
     "django.middleware.security.SecurityMiddleware",
@@ -86,6 +89,9 @@ TEMPLATES = [
 WSGI_APPLICATION = (
     "phi_mart.wsgi.app"  # --> Vercel requires the WSGI application to be named 'app'
 )
+
+# ---> CORS (Cross-Origin Resource Sharing) settings
+CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
 
 
 # Database
