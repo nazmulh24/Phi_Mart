@@ -25,5 +25,6 @@ class UserSerializer(BaseUserSerializer):
             "last_name",
             "address",
             "phone_number",
+            "is_staff",
         )
-        read_only_fields = ("id", "email", "password")
+        read_only_fields = ("id", "email", "password", "is_staff")
