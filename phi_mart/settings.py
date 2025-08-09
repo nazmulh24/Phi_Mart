@@ -91,7 +91,10 @@ WSGI_APPLICATION = (
 )
 
 # ---> CORS (Cross-Origin Resource Sharing) settings
-CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "https://phi-mart-client-topaz.vercel.app/",
+]
 
 
 # Database
