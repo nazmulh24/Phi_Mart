@@ -41,6 +41,13 @@ class CartViewSet(
 
     permission_classes = [IsAuthenticated]
 
+    def create(self, request, *args, **kwargs):
+        existing_cart = Cart.objects.filter(user=request.user).first()
+        if existing_cart:
+            serializer = self.get_serializer(existing_cart)
+            return Response(serializer.data, status=200)
+        return super().create(request, *args, **kwargs)
+
 
 class CartItemViewSet(ModelViewSet):
     http_method_names = ["get", "post", "patch", "delete"]
@@ -90,7 +97,7 @@ class OrderViewSet(ModelViewSet):
         return [IsAuthenticated()]
 
     def get_queryset(self):
-        if getattr(self, 'swagger_fake_view', False):
+        if getattr(self, "swagger_fake_view", False):
             return Order.objects.none()
         if self.request.user.is_staff:
             return Order.objects.prefetch_related("items__product").all()
