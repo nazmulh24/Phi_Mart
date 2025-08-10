@@ -8,7 +8,7 @@ from product.views import (
     CategoryViewSet,
     ReviewViewSet,
 )
-from order.views import CartViewSet, CartItemViewSet, OrderViewSet
+from order.views import CartViewSet, CartItemViewSet, OrderViewSet, initiate_payment
 
 
 router = routers.DefaultRouter()  # ----> Api Root a error day na...link day...
@@ -31,4 +31,5 @@ urlpatterns = [
     path("", include(cart_router.urls)),
     path("auth/", include("djoser.urls")),
     path("auth/", include("djoser.urls.jwt")),
+    path("payment/initiate", initiate_payment, name="initiate-payment"),
 ]
